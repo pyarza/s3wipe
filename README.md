@@ -30,6 +30,8 @@ deletion tool that:
 
 Using s3wipe, I was able to delete _400 million S3 objects in about 24 hours_.
 
+It works with S3 endpoints provided by AWS or by other S3 providers by using a custom endpoint host.
+
 ## Installation
 
 This is just a single-file script, so just go ahead and run it.  It will need
@@ -68,7 +70,7 @@ Then run the script:
 ## Usage
 
 ```
-usage: s3wipe [-h] --path PATH --id ID --key KEY [--dryrun] [--quiet]
+usage: s3wipe [-h] --path PATH --id ID --key KEY --endpoint HOST [--dryrun] [--quiet]
               [--batchsize BATCHSIZE] [--maxqueue MAXQUEUE] [--delbucket]
 
 Recursively delete all keys in an S3 path
@@ -78,6 +80,7 @@ optional arguments:
   --path PATH            S3 path to delete (e.g. s3://bucket/path)
   --id ID                Your AWS access key ID
   --key KEY              Your AWS secret access key
+  --endpoint HOST        Custom HOST endpoint (e.g. ams3.digitaloceanspaces.com)
   --dryrun               Don't delete. Print what we would have deleted
   --quiet                Suprress all non-error output
   --batchsize BATCHSIZE  # of keys to batch delete (default 100)
