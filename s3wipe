@@ -40,6 +40,8 @@ def getArgs():
         help="Your AWS access key ID", required=False)
     parser.add_argument("--key", 
         help="Your AWS secret access key", required=False)
+    parser.add_argument("--endpoint", 
+        help="Your AWS or S3 provider endpoint (host). For digitalocean spaces AMS3 it would be: ams3.digitaloceanspaces.com", required=False)    
     parser.add_argument("--dryrun", 
         help="Don't delete.  Print what we would have deleted", 
         action='store_true')
@@ -93,9 +95,15 @@ def loggerSetup(args):
 def deleter(args, rmQueue, numThreads):
 
     # Set up per-thread boto objects
-    myconn = boto.s3.connection.S3Connection(                                  
-        aws_access_key_id=args.id,
-        aws_secret_access_key=args.key)
+    if args.endpoint:
+        myconn = boto.s3.connection.S3Connection(                                  
+            aws_access_key_id=args.id,
+            aws_secret_access_key=args.key,
+            host=args.endpoint)
+    else:
+        myconn = boto.s3.connection.S3Connection(                                  
+            aws_access_key_id=args.id,
+            aws_secret_access_key=args.key)
     bucket, path = args.path
     mybucket = myconn.get_bucket(bucket)
 
@@ -143,9 +151,15 @@ def listInit(arg1, arg2):
 def lister(subDir):
 
     # Set up our per-thread boto connection
-    myconn = boto.s3.connection.S3Connection(                                  
-        aws_access_key_id=args.id,
-        aws_secret_access_key=args.key)
+    if args.endpoint:
+        myconn = boto.s3.connection.S3Connection(                                  
+            aws_access_key_id=args.id,
+            aws_secret_access_key=args.key,
+            host=args.endpoint)
+    else:
+        myconn = boto.s3.connection.S3Connection(                                  
+            aws_access_key_id=args.id,
+            aws_secret_access_key=args.key)
     bucket, path = args.path
     mybucket = myconn.get_bucket(bucket)
 
@@ -181,9 +195,15 @@ def main():
 
     # Our main boto object.  Really only used to start the
     # watcher threads on a per-subdir basis
-    conn = boto.s3.connection.S3Connection(                                  
-        aws_access_key_id=args.id,
-        aws_secret_access_key=args.key)
+    if args.endpoint:
+        conn = boto.s3.connection.S3Connection(                                  
+            aws_access_key_id=args.id,
+            aws_secret_access_key=args.key,
+            host=args.endpoint)
+    else:
+        conn = boto.s3.connection.S3Connection(                                  
+            aws_access_key_id=args.id,
+            aws_secret_access_key=args.key)
 
     try:
         mybucket = conn.get_bucket(bucket)
